@@ -1,31 +1,30 @@
-import React, { useMemo } from "react";
-
 /**
- * Fix for: SyntaxError /index.tsx: Unexpected token (1:0)
+ * This file is executed as /index.tsx in the sandbox.
  *
- * Your environment is trying to execute this file as TSX (index.tsx).
- * A raw HTML document (starting with <!DOCTYPE html>) is NOT valid TSX,
- * so it throws immediately.
+ * You want a purely static site:
+ *   - index.html
+ *   - yard.webp
  *
- * Solution: Keep this file as a valid React component, and render the
- * plain-HTML website via an <iframe srcDoc>.
+ * The full HTML you should paste into index.html is provided below as STATIC_INDEX_HTML.
  *
- * Expected behaviour question (answer in chat):
- * - Do you want this to deploy as a plain HTML site on Vercel (no React at all),
- *   OR do you only need it to render inside this ChatGPT preview?
+ * Why the prior version crashed with:
+ *   InvalidCharacterError: The string contains invalid characters.
+ * The sandbox likely tries to treat the default export as a React component. If the default export
+ * is a string (containing "<!DOCTYPE html>..."), React will attempt to use that string as an HTML tag
+ * name, which is invalid and triggers InvalidCharacterError.
  *
- * If you want Vercel plain HTML: your repo should contain index.html + yard.webp,
- * not index.tsx. (I can give you the exact two-file setup.)
+ * Fix:
+ *   - Keep the default export as a component (so the sandbox can render it)
+ *   - Do NOT import React (new JSX transform)
+ *   - Render the HTML string inside an iframe via srcDoc
  */
 
-export default function GCLandscapingOldPreview() {
-  const html = useMemo(
-    () => `<!DOCTYPE html>
+export const STATIC_INDEX_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GC Landscaping | Gold Coast Landscaping & Garden Maintenance</title>
+  <title>GC Landscaping | Gold Coast Landscaping &amp; Garden Maintenance</title>
 
   <style>
     /* INTENTIONALLY OUTDATED "OLD WEB" LOOK */
@@ -129,14 +128,15 @@ export default function GCLandscapingOldPreview() {
       font-size: 12px;
       margin-right: 8px;
       box-shadow: 1px 1px 0 rgba(0,0,0,.2);
+      cursor: pointer;
     }
     .btn:hover{ filter: brightness(0.98); }
 
-    /* HERO IMAGE (local file) */
+    /* HERO IMAGE (local file in same folder as index.html) */
     .photo{
       height: 220px;
       border: 2px solid #999;
-      background-image: url("./yard.webp");
+      background-image: url('./yard.webp');
       background-size: cover;
       background-position: center;
       box-shadow: inset 0 0 0 2px #fff;
@@ -269,7 +269,7 @@ export default function GCLandscapingOldPreview() {
 
     <div class="header">
       <div class="logo">GC Landscaping</div>
-      <div class="tagline">Serving the Gold Coast since 2009 • Lawns • Hedges • Paving • Retaining Walls</div>
+      <div class="tagline">Serving the Gold Coast since 2009 &bull; Lawns &bull; Hedges &bull; Paving &bull; Retaining Walls</div>
     </div>
 
     <div class="nav">
@@ -295,7 +295,7 @@ export default function GCLandscapingOldPreview() {
           </p>
 
           <div class="photo" aria-label="Hero photo">
-            <div class="caption">Front yard turf install — Southport QLD</div>
+            <div class="caption">Front yard turf install - Southport QLD</div>
           </div>
         </div>
 
@@ -327,11 +327,11 @@ export default function GCLandscapingOldPreview() {
 
               <p>
                 <button class="btn" type="submit">SUBMIT</button>
-                <span style="font-size:11px; color:#555; margin-left:8px;">(This is a demo form)</span>
+                <span style="font-size:11px; color:#555; margin-left:8px;">(Demo form)</span>
               </p>
 
               <p style="font-size:11px; margin-top:10px;">
-                <strong>Hours:</strong> Mon–Sat 7am–5pm<br/>
+                <strong>Hours:</strong> Mon-Sat 7am-5pm<br/>
                 <strong>Email:</strong> info@gclandscaping.com.au<br/>
                 <strong>ABN:</strong> 12 345 678 901
               </p>
@@ -375,23 +375,21 @@ export default function GCLandscapingOldPreview() {
 
       <div class="beforeafter" id="beforeafter">
         <h2>Before &amp; After (Old School Gallery)</h2>
-        <p>
-          Here are a few jobs around the Gold Coast. Click the button to “shuffle” examples.
-        </p>
+        <p>Here are a few jobs around the Gold Coast. Click the button to "shuffle" examples.</p>
 
         <div class="ba-grid">
           <div class="ba-cell">
             <div class="ba-img" id="beforeImg">
               <div class="label">BEFORE</div>
             </div>
-            <p style="font-size:12px; color:#444;">Overgrown yard • uneven edges • patchy lawn</p>
+            <p style="font-size:12px; color:#444;">Overgrown yard &bull; uneven edges &bull; patchy lawn</p>
           </div>
 
           <div class="ba-cell">
             <div class="ba-img" id="afterImg">
               <div class="label">AFTER</div>
             </div>
-            <p style="font-size:12px; color:#444;">Fresh turf • neat borders • new mulch • tidy finish</p>
+            <p style="font-size:12px; color:#444;">Fresh turf &bull; neat borders &bull; new mulch &bull; tidy finish</p>
           </div>
         </div>
 
@@ -404,9 +402,9 @@ export default function GCLandscapingOldPreview() {
       <div style="margin-top:16px;" id="testimonials">
         <h2>Testimonials</h2>
         <p style="font-size:13px;">
-          <strong>“Great job and good price.”</strong> – Dave, Robina<br/>
-          <strong>“Turned up on time and cleaned everything up.”</strong> – Melissa, Southport<br/>
-          <strong>“Happy with the turf install.”</strong> – Jason, Burleigh Heads
+          <strong>"Great job and good price."</strong> - Dave, Robina<br/>
+          <strong>"Turned up on time and cleaned everything up."</strong> - Melissa, Southport<br/>
+          <strong>"Happy with the turf install."</strong> - Jason, Burleigh Heads
         </p>
       </div>
 
@@ -433,11 +431,11 @@ export default function GCLandscapingOldPreview() {
 
     <div class="footer">
       <span class="counter" id="counter">Visitors: 000000</span>
-      © 2011–2026 GC Landscaping • <a href="#home">Home</a> • <a href="#services">Services</a> • <a href="#contact">Contact</a> •
-      <a href="javascript:void(0)" onclick="alert('This is a demo old site.')">Privacy Policy</a>
+      &copy; 2011-2026 GC Landscaping &bull; <a href="#home">Home</a> &bull; <a href="#services">Services</a> &bull; <a href="#contact">Contact</a> &bull;
+      <a href="javascript:void(0)" onclick="alert('Demo old site.')">Privacy Policy</a>
       <div class="clear"></div>
       <div style="margin-top:6px; color:#666;">
-        Best viewed in 1024x768 • Website by “My Cousin” • Last Updated: 14/03/2014
+        Best viewed in 1024x768 &bull; Website by "My Cousin" &bull; Last Updated: 14/03/2014
       </div>
     </div>
   </div>
@@ -448,13 +446,12 @@ export default function GCLandscapingOldPreview() {
       return false;
     }
 
-    // Fake visitor counter
     (function(){
       var n = Math.floor(10000 + Math.random() * 90000);
-      document.getElementById("counter").innerText = "Visitors: " + String(n).padStart(6, "0");
+      var el = document.getElementById("counter");
+      if (el) el.innerText = "Visitors: " + String(n).padStart(6, "0");
     })();
 
-    // Before/After shuffle
     var examples = [
       { b: "Before: Overgrown hedges + weeds everywhere", a: "After: Clean trim + fresh mulch + tidy edges" },
       { b: "Before: Patchy lawn + dead spots", a: "After: New turf laid + topsoil levelled" },
@@ -464,27 +461,57 @@ export default function GCLandscapingOldPreview() {
 
     function shuffleBA(){
       var pick = examples[Math.floor(Math.random() * examples.length)];
-      document.getElementById("baStatus").innerText = " " + pick.b + " | " + pick.a;
+      var out = document.getElementById("baStatus");
+      if (out) out.innerText = " " + pick.b + " | " + pick.a;
     }
+
+    // Basic self-tests (open DevTools Console to see results)
+    (function runSelfTests(){
+      var tests = [
+        { name: "Has DOCTYPE", ok: !!document.doctype },
+        { name: "Hero image container exists", ok: !!document.querySelector('.photo') },
+        { name: "Hero caption exists", ok: !!document.querySelector('.photo .caption') },
+        { name: "Before/After section exists", ok: !!document.getElementById('beforeafter') },
+        { name: "Shuffle function exists", ok: typeof window.shuffleBA === 'function' },
+        { name: "Quote form exists", ok: !!document.getElementById('quote') }
+      ];
+
+      var allOk = tests.every(function(t){ return t.ok; });
+      if (allOk) {
+        console.log("[GC Landscaping demo] Self-tests: PASS", tests);
+      } else {
+        console.warn("[GC Landscaping demo] Self-tests: FAIL", tests);
+      }
+    })();
   </script>
 </body>
-</html>` ,
-    []
-  );
+</html>`;
+
+function assert(condition: boolean, message: string) {
+  if (!condition) throw new Error(message);
+}
+
+// Additional TS-level tests
+assert(STATIC_INDEX_HTML.startsWith("<!DOCTYPE html>"), "STATIC_INDEX_HTML should start with <!DOCTYPE html>");
+assert(STATIC_INDEX_HTML.includes("url('./yard.webp')"), "HTML should reference ./yard.webp using single quotes");
+assert(!STATIC_INDEX_HTML.includes("\u0000"), "HTML should not contain NUL characters");
+
+export default function Preview() {
+  // Expected behaviour question:
+  // When you deploy, do you want this as a static index.html site (no TSX at all),
+  // or are you only using this sandbox preview?
+  // (Answer in chat and I'll tailor the final output.)
 
   return (
-    <div style={{ width: "100%", height: "85vh", background: "#d9d9d9", padding: 12, boxSizing: "border-box" }}>
+    <div style={{ width: '100%', minHeight: '80vh', padding: 12, background: '#0b0f14', boxSizing: 'border-box' }}>
+      <div style={{ color: '#cbd5e1', fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Arial', fontSize: 13, marginBottom: 10 }}>
+        Previewing the old-style static HTML inside an iframe. For Vercel static deploy, copy STATIC_INDEX_HTML into a real index.html.
+      </div>
       <iframe
-        title="GC Landscaping Old Site (Plain HTML)"
-        srcDoc={html}
-        style={{
-          width: "100%",
-          height: "100%",
-          border: "1px solid rgba(0,0,0,.2)",
-          borderRadius: 10,
-          background: "#d9d9d9",
-        }}
-        sandbox="allow-forms allow-scripts allow-popups allow-same-origin"
+        title="GC Landscaping (Old Site)"
+        srcDoc={STATIC_INDEX_HTML}
+        style={{ width: '100%', height: '75vh', border: '1px solid rgba(148,163,184,0.25)', borderRadius: 10, background: '#d9d9d9' }}
+        sandbox="allow-forms allow-scripts allow-popups"
       />
     </div>
   );
