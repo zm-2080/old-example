@@ -1,0 +1,494 @@
+import React, { useEffect, useMemo, useState } from "react";
+
+export default function GCLandscapingOldPreview() {
+  // Intentionally cheesy "visitor counter"
+  const [visitors, setVisitors] = useState("000000");
+
+  const examples = useMemo(
+    () => [
+      {
+        b: "Before: Overgrown hedges + weeds everywhere",
+        a: "After: Clean trim + fresh mulch + tidy edges",
+      },
+      { b: "Before: Patchy lawn + dead spots", a: "After: New turf laid + topsoil levelled" },
+      { b: "Before: Old pavers uneven + grass between", a: "After: Re-laid pavers + sanded joints" },
+      { b: "Before: Bare garden bed + messy rocks", a: "After: New plants + defined border" },
+    ],
+    []
+  );
+
+  const [baStatus, setBaStatus] = useState("");
+
+  useEffect(() => {
+    const n = Math.floor(10000 + Math.random() * 90000);
+    setVisitors(String(n).padStart(6, "0"));
+  }, []);
+
+  function fakeSubmit(e) {
+    e.preventDefault();
+    // Intentionally old-school alert
+    alert("Thanks! Your quote request has been sent. (Demo form)");
+  }
+
+  function shuffleBA() {
+    const pick = examples[Math.floor(Math.random() * examples.length)];
+    setBaStatus(`${pick.b} | ${pick.a}`);
+  }
+
+  return (
+    <div
+      style={{
+        margin: 0,
+        background: "#d9d9d9",
+        fontFamily: '"Trebuchet MS", Arial, sans-serif',
+        color: "#111",
+        padding: 16,
+      }}
+    >
+      <div
+        style={{
+          width: 960,
+          maxWidth: "100%",
+          margin: "0 auto",
+          background: "#fff",
+          borderLeft: "6px solid #2f5e2f",
+          borderRight: "6px solid #2f5e2f",
+          boxShadow: "0 0 10px rgba(0,0,0,.25)",
+        }}
+      >
+        {/* Top bar */}
+        <div
+          style={{
+            background: "#1f3b1f",
+            color: "#fff",
+            fontSize: 12,
+            padding: "6px 10px",
+            letterSpacing: 0.3,
+            display: "flex",
+            gap: 10,
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <span>Gold Coast Landscaping &amp; Garden Maintenance</span>
+          <span>
+            Call Today: <strong>(07) 5555 0123</strong> |{" "}
+            <a href="#quote" style={{ color: "#fff", textDecoration: "underline" }}>
+              Request a Quote
+            </a>
+          </span>
+        </div>
+
+        {/* Header */}
+        <div
+          style={{
+            padding: "18px 18px 12px 18px",
+            background: "linear-gradient(#3b7a3b, #2f5e2f)",
+            color: "#fff",
+            borderBottom: "4px solid #173117",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 34,
+              fontWeight: 700,
+              textShadow: "1px 1px 0 rgba(0,0,0,.35)",
+            }}
+          >
+            GC Landscaping
+          </div>
+          <div style={{ marginTop: 4, fontSize: 14, opacity: 0.95 }}>
+            Serving the Gold Coast since 2009 • Lawns • Hedges • Paving • Retaining Walls
+          </div>
+        </div>
+
+        {/* Nav */}
+        <div
+          style={{
+            background: "#efefef",
+            borderTop: "1px solid #cfcfcf",
+            borderBottom: "1px solid #cfcfcf",
+            padding: "6px 10px",
+            fontSize: 13,
+            display: "flex",
+            gap: 14,
+            flexWrap: "wrap",
+          }}
+        >
+          {[
+            ["Home", "#home"],
+            ["Services", "#services"],
+            ["Before & After", "#beforeafter"],
+            ["Testimonials", "#testimonials"],
+            ["About Us", "#about"],
+            ["Contact", "#contact"],
+          ].map(([label, href]) => (
+            <a
+              key={href}
+              href={href}
+              style={{
+                color: "#0b4a0b",
+                textDecoration: "none",
+                fontWeight: 700,
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.textDecoration = "underline")}
+              onMouseLeave={(e) => (e.currentTarget.style.textDecoration = "none")}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        {/* Hero */}
+        <div id="home" style={{ padding: "14px 18px", background: "#f7f7f7", borderBottom: "1px solid #d7d7d7" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 3fr) minmax(0, 2fr)",
+              gap: 14,
+            }}
+          >
+            <div>
+              <h1 style={{ margin: "0 0 8px 0", fontSize: 22 }}>Affordable Landscaping on the Gold Coast</h1>
+              <p style={{ margin: "0 0 10px 0", fontSize: 13, lineHeight: 1.45 }}>
+                Need your yard cleaned up? Want a new garden bed, turf, or a simple paving job? GC Landscaping provides
+                reliable landscaping and garden maintenance across the Gold Coast.
+              </p>
+              <p style={{ margin: "0 0 10px 0", fontSize: 13, lineHeight: 1.45 }}>
+                <a href="#quote" style={btnStyle}>
+                  GET A FREE QUOTE
+                </a>
+                <a href="#services" style={btnStyle}>
+                  VIEW SERVICES
+                </a>
+              </p>
+
+              <div
+                aria-label="Hero photo"
+                style={{
+                  height: 220,
+                  border: "2px solid #999",
+                  backgroundImage: "url(/yard.jpg)",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  boxShadow: "inset 0 0 0 2px #fff",
+                  position: "relative",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: "rgba(0,0,0,.65)",
+                    color: "#fff",
+                    fontSize: 12,
+                    padding: "6px 8px",
+                  }}
+                >
+                  Front yard turf install — Southport QLD
+                </div>
+              </div>
+            </div>
+
+            {/* Quote form */}
+            <div id="quote" style={{ border: "1px solid #9aa79a", background: "#f1fff1", padding: 10, fontSize: 12 }}>
+              <h2 style={h2Style}>Quick Quote Form</h2>
+              <p style={{ margin: "0 0 10px 0", fontSize: 12, lineHeight: 1.45 }}>
+                Fill this out and we will call you back (usually within 24–48 hours).
+              </p>
+
+              <form onSubmit={fakeSubmit}>
+                <Label>Name:</Label>
+                <Input placeholder="e.g. Sam" />
+
+                <Label>Phone:</Label>
+                <Input placeholder="e.g. 04xx xxx xxx" />
+
+                <Label>Suburb:</Label>
+                <select style={inputStyle} defaultValue="Southport">
+                  {[
+                    "Southport",
+                    "Bundall",
+                    "Robina",
+                    "Burleigh Heads",
+                    "Varsity Lakes",
+                    "Helensvale",
+                    "Other",
+                  ].map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <Label>Job Details:</Label>
+                <textarea style={{ ...inputStyle, height: 70 }} placeholder="Tell us what you need done..." />
+
+                <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8 }}>
+                  <button type="submit" style={{ ...btnStyle, cursor: "pointer" }}>
+                    SUBMIT
+                  </button>
+                  <span style={{ fontSize: 11, color: "#555" }}>(This is a demo form)</span>
+                </div>
+
+                <p style={{ fontSize: 11, marginTop: 10, color: "#333", lineHeight: 1.5 }}>
+                  <strong>Hours:</strong> Mon–Sat 7am–5pm
+                  <br />
+                  <strong>Email:</strong> info@gclandscaping.com.au
+                  <br />
+                  <strong>ABN:</strong> 12 345 678 901
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="content" style={{ padding: "16px 18px" }}>
+          <section id="services">
+            <h2 style={h2Style}>Our Services</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 14 }}>
+              <ServiceCol
+                title="Lawn & Garden"
+                items={["Mowing & edging", "Hedge trimming", "Weeding & clean-ups", "Mulch & garden beds"]}
+              />
+              <ServiceCol
+                title="Landscaping"
+                items={["Turf install", "Paving & stepping stones", "Retaining walls", "Soil & drainage"]}
+              />
+              <ServiceCol
+                title="Other"
+                items={["Small demolitions", "Rubbish removal", "Basic irrigation repairs", "Rental property tidy-ups"]}
+              />
+            </div>
+          </section>
+
+          <section
+            id="beforeafter"
+            style={{
+              marginTop: 16,
+              border: "2px dashed #9aa79a",
+              padding: 10,
+              background: "#f9fff9",
+            }}
+          >
+            <h2 style={h2Style}>Before &amp; After (Old School Gallery)</h2>
+            <p style={{ margin: "0 0 10px 0", fontSize: 13, lineHeight: 1.45 }}>
+              Here are a few jobs around the Gold Coast. Click the button to “shuffle” examples. (Yes… this is meant to
+              look a bit dodgy.)
+            </p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+              <BABox label="BEFORE" helper="Overgrown yard • uneven edges • patchy lawn" />
+              <BABox label="AFTER" helper="Fresh turf • neat borders • new mulch • tidy finish" />
+            </div>
+
+            <div style={{ marginTop: 10, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              <button type="button" style={{ ...btnStyle, cursor: "pointer" }} onClick={shuffleBA}>
+                SHUFFLE EXAMPLES
+              </button>
+              <span style={{ fontSize: 12, color: "#555" }}>{baStatus}</span>
+            </div>
+          </section>
+
+          <section id="testimonials" style={{ marginTop: 16 }}>
+            <h2 style={h2Style}>Testimonials</h2>
+            <p style={{ margin: "0 0 10px 0", fontSize: 13, lineHeight: 1.55 }}>
+              <strong>“Great job and good price.”</strong> – Dave, Robina
+              <br />
+              <strong>“Turned up on time and cleaned everything up.”</strong> – Melissa, Southport
+              <br />
+              <strong>“Happy with the turf install.”</strong> – Jason, Burleigh Heads
+            </p>
+            <p style={{ fontSize: 11, color: "#666" }}>(Testimonials not independently verified — demo content)</p>
+          </section>
+
+          <section id="about" style={{ marginTop: 16 }}>
+            <h2 style={h2Style}>About GC Landscaping</h2>
+            <p style={{ margin: "0 0 10px 0", fontSize: 13, lineHeight: 1.55 }}>
+              We are a local Gold Coast landscaping team offering garden maintenance and small landscaping projects. We
+              service residential homes, units, and rental properties. No job too small.
+            </p>
+          </section>
+
+          <section id="contact" style={{ marginTop: 16 }}>
+            <h2 style={h2Style}>Contact</h2>
+            <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55 }}>
+              Phone: <strong>(07) 5555 0123</strong>
+              <br />
+              Email: <strong>info@gclandscaping.com.au</strong>
+              <br />
+              Service Area: Gold Coast, QLD
+            </p>
+            <p style={{ marginTop: 8, fontSize: 12, color: "#555" }}>
+              <strong>Address:</strong> (By appointment only) Southport QLD 4215
+            </p>
+          </section>
+        </div>
+
+        {/* Footer */}
+        <div
+          style={{
+            background: "#efefef",
+            borderTop: "1px solid #cfcfcf",
+            padding: "10px 18px",
+            fontSize: 11,
+            color: "#333",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+            <div>
+              © 2011–2026 GC Landscaping •{" "}
+              <a href="#home" style={{ color: "#0b4a0b" }}>
+                Home
+              </a>
+              {" "}•{" "}
+              <a href="#services" style={{ color: "#0b4a0b" }}>
+                Services
+              </a>
+              {" "}•{" "}
+              <a href="#contact" style={{ color: "#0b4a0b" }}>
+                Contact
+              </a>
+              {" "}•{" "}
+              <a
+                href="#"
+                style={{ color: "#0b4a0b" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert("This is a demo old site.");
+                }}
+              >
+                Privacy Policy
+              </a>
+            </div>
+            <div
+              style={{
+                background: "#fff",
+                border: "1px solid #aaa",
+                padding: "2px 6px",
+                fontFamily: '"Courier New", monospace',
+                fontSize: 11,
+              }}
+            >
+              Visitors: {visitors}
+            </div>
+          </div>
+          <div style={{ marginTop: 6, color: "#666" }}>
+            Best viewed in 1024x768 • Website by “My Cousin” • Last Updated: 14/03/2014
+          </div>
+        </div>
+      </div>
+
+      {/* Intentionally tiny "credit" outside the boxed site */}
+      {/* A pinch of responsiveness to avoid totally breaking */}
+      <style>{`
+        @media (max-width: 860px) {
+          .content-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function ServiceCol({ title, items }) {
+  return (
+    <div
+      style={{
+        background: "#fbfbfb",
+        border: "1px solid #d9d9d9",
+        padding: 10,
+      }}
+    >
+      <h3 style={{ margin: "0 0 8px 0", fontSize: 14 }}>{title}</h3>
+      <ul style={{ margin: "6px 0 0 18px", padding: 0, fontSize: 13 }}>
+        {items.map((it) => (
+          <li key={it}>{it}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function BABox({ label, helper }) {
+  return (
+    <div>
+      <div
+        style={{
+          height: 180,
+          border: "2px solid #777",
+          background:
+            "repeating-linear-gradient(90deg, #eaeaea, #eaeaea 10px, #f7f7f7 10px, #f7f7f7 20px)",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 6,
+            left: 6,
+            fontSize: 11,
+            background: "#173117",
+            color: "#fff",
+            padding: "3px 6px",
+          }}
+        >
+          {label}
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: "#444", margin: "6px 0 0 0" }}>{helper}</p>
+    </div>
+  );
+}
+
+function Label({ children }) {
+  return (
+    <label
+      style={{
+        display: "block",
+        margin: "6px 0 2px 0",
+        fontWeight: 700,
+        color: "#1f3b1f",
+      }}
+    >
+      {children}
+    </label>
+  );
+}
+
+function Input(props) {
+  return <input {...props} style={inputStyle} />;
+}
+
+const inputStyle = {
+  width: "100%",
+  fontSize: 12,
+  padding: 6,
+  border: "1px solid #999",
+  background: "#fff",
+  fontFamily: "Arial, sans-serif",
+  boxSizing: "border-box",
+};
+
+const btnStyle = {
+  display: "inline-block",
+  padding: "8px 10px",
+  border: "1px solid #0b4a0b",
+  background: "linear-gradient(#c7f0c7, #7fd47f)",
+  color: "#0b4a0b",
+  fontWeight: 700,
+  textDecoration: "none",
+  fontSize: 12,
+  marginRight: 8,
+  boxShadow: "1px 1px 0 rgba(0,0,0,.2)",
+};
+
+const h2Style = {
+  margin: "0 0 8px 0",
+  fontSize: 16,
+  color: "#0b4a0b",
+  borderBottom: "1px dotted #aaa",
+  paddingBottom: 4,
+};
