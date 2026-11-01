@@ -204,7 +204,7 @@ const references = [
   ref('Australian Institute for Disaster Resilience. (2024). *Cyclone – Tropical Cyclone Jasper, Queensland, December 2023 – January 2024*. Australian Disaster Resilience Knowledge Hub. https://knowledge.aidr.org.au/resources/cyclone-tropical-cyclone-jasper-queensland-2023/'),
   ref('Commonwealth of Australia. (2018). *Disaster recovery funding arrangements 2018*. National Emergency Management Agency. https://www.nema.gov.au/sites/default/files/2024-08/disaster-recovery-funding-arrangements-2018.pdf'),
   ref('CSIRO & Bureau of Meteorology. (2024). *State of the climate 2024*. Commonwealth of Australia. https://www.bom.gov.au/state-of-the-climate/'),
-  ref('Doshi, A. (2026, October [[day]]). *Unsealed road management in Cook Shire* [Guest lecture slides and recording]. ECON3700 Environmental Economics, The University of Queensland.'),
+  ref('Doshi, A. (2026, October 21). *Unsealed road management in Cook Shire* [Guest lecture slides and recording]. ECON3700 Environmental Economics, The University of Queensland.'),
   ref('Doshi, A., Erlandsen, A., Charlton-Henderson, S., Joyse, K., & Nyman, P. (2026). Incorporating fine sediment pollution impacts into unsealed road management: A case study from the Great Barrier Reef catchment area. *Environmental Management, 76*(4), Article 128. https://doi.org/10.1007/s00267-026-02423-2'),
   ref('Field, B. C., & Field, M. K. (2024). *Environmental economics: An introduction* (9th ed.). McGraw Hill.'),
   ref('Infrastructure Australia. (2021). *Guide to economic appraisal: Technical guide of the Assessment Framework*. Australian Government.'),
