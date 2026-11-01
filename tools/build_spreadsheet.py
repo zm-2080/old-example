@@ -59,7 +59,7 @@ CPI_ROWS = [
 ] + [(M0 + k, 'data2', f'CPI index, {m}', 'index', v, f'{SRC_ABS}, monthly release for {m}, Sep-25 = 100')
      for k, (m, v) in enumerate(M_IDX)] + [
     (QN0 - 1, 'header', 'FY2025-26 quarterly CPI, Sep-25 = 100 (ABS: quarter = average of its three monthly indexes)', '', None, ''),
-    (QN0, 'data', 'CPI index, Sep-25 quarter', 'index', 100.0, 'ABS re-referencing link period, Sep-25 quarter = 100.0'),
+    (QN0, 'data2', 'CPI index, Sep-25 quarter', 'index', 99.73, 'ABS quarterly series (Table 17), re-referenced so that the Sep-25 month = 100; quarter = average of Jul-25 to Sep-25 monthly indexes'),
     (QN0 + 1, 'row', 'CPI index, Dec-25 quarter', 'index', f'AVERAGE(C{M0}:C{M0 + 2})', 'Average of Oct-25 to Dec-25 monthly indexes'),
     (QN0 + 2, 'row', 'CPI index, Mar-26 quarter', 'index', f'AVERAGE(C{M0 + 3}:C{M0 + 5})', 'Average of Jan-26 to Mar-26 monthly indexes'),
     (QN0 + 3, 'row', 'CPI index, Jun-26 quarter', 'index', f'AVERAGE(C{M0 + 6}:C{M0 + 8})', 'Average of Apr-26 to Jun-26 monthly indexes'),
@@ -205,7 +205,7 @@ colhead(23, 'Measure')
 rows += [(24, 'NPV (financial + environmental) with higher erosion ($)', lambda c: f'=DCF!{SC[c]}74+(1+$B$22)*DCF!{SC[c]}72'),
          (25, 'Cost-effectiveness with higher erosion ($/t)', lambda c: f'=DCF!{SC[c]}67/((1+$B$22)*DCF!{SC[c]}78)')]
 sens['A26'] = ('Financial costs are unchanged; tonnes avoided and their value scale with the erosion rates.', LABEL)
-sens['A28'] = ('4. Payback of upfront costs against BAU (undiscounted financial costs, see table 6)', HEAD)
+sens['A28'] = ('4. Payback of upfront costs against BAU (undiscounted financial costs, see block 6 below)', HEAD)
 colhead(29, 'Measure')
 rows += [(30, 'First year cumulative savings repay the outlay', lambda c: f'=IF(COUNTIF({c}$58:{c}$87,">0")=30,"Beyond FY2055",Inputs!$C$4+COUNTIF({c}$58:{c}$87,">0"))')]
 sens['A31'] = ('S4 discounted net cost still unrecovered at FY2055 ($)', LABEL); sens['D31'] = ('=E87', CUR)
@@ -241,7 +241,7 @@ for r, label, fn in rows:
 CURIN = 40   # "$"#,##0 input style
 sens['A89'] = ('7. Sediment value range and achieved reductions', HEAD)
 sens['A90'] = ('Low avoided abatement cost value (FY2024 $/t)', LABEL); sens['B90'] = (70, CURIN)
-sens['A91'] = ('High avoided abatement cost value (FY2024 $/t)', LABEL); sens['B91'] = (5000, CURIN)
+sens['A91'] = ('High avoided abatement cost value (FY2024 $/t)', LABEL); sens['B91'] = (5745, CURIN)
 sens['A92'] = ('Low value indexed to FY2026 ($/t)', LABEL); sens['B92'] = ('=B90*Inputs!$C$41', CURT)
 sens['A93'] = ('High value indexed to FY2026 ($/t)', LABEL); sens['B93'] = ('=B91*Inputs!$C$41', CURT)
 sens['A94'] = ('Sediment reductions achieved (share of modelled)', LABEL); sens['B94'] = (0.8, PCT)
