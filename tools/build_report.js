@@ -76,14 +76,18 @@ const ref = (t) => new Paragraph({ children: runs(t), spacing: DOUBLE, indent: {
 
 // ---------------- CONTENT ----------------
 const body = [];
+const LI = (n, t) => { count(t); return new Paragraph({ children: runs(`${n}.\t${t}`), spacing: DOUBLE, indent: { left: 720, hanging: 360 }, tabStops: [{ type: 'left', position: 720 }] }); };
+
+body.push(H1('Executive Summary'));
+body.push(P('This report appraises four options for managing 21.5 km of unsealed road in Cook Shire to reduce fine sediment reaching the Great Barrier Reef. Over 30 years at a 7% discount rate, full betterment (S4) is both the most cost-effective option ($622 per tonne avoided) and the most economically efficient (NPV of $5.93M relative to business-as-usual). However, S4 is financially infeasible for Council alone: its financial NPV is −$1.54M and it requires $4.95M of upfront capital. We recommend adopting alternative maintenance (S2) immediately as an interim step and delivering S4 in stages with Reef and disaster-recovery co-funding. The result holds at 4% and 10% discount rates, under a 60% capital overrun and with 20% higher erosion.'));
 
 body.push(H1('Introduction'));
 body.push(H2('Road Erosion and Climate Risk in Cook Shire'));
-body.push(P('Cook Shire Council maintains an extensive network of unsealed roads in Cape York catchments that drain to the Great Barrier Reef (GBR). The region’s monsoonal climate delivers intense wet-season rainfall and near-annual cyclones, which strip fine material from road surfaces, table drains and batters (Shellberg et al., 2026). Business-as-usual (BAU) maintenance compounds the problem: graders reshape the road crown, re-cut drains and remove all verge vegetation, leaving bare, highly erodible soil to scour in the next storm. Because disaster recovery funding generally reinstates roads only to their pre-disaster standard (Commonwealth of Australia, 2018), Council is locked into a cycle of washout, regrading and renewed erosion (Doshi, 2026).'));
+body.push(P('Cook Shire Council maintains an extensive network of unsealed roads in Cape York catchments draining to the Great Barrier Reef (GBR). Intense wet-season rainfall and near-annual cyclones strip fine material from road surfaces, table drains and batters (Shellberg et al., 2026). Business-as-usual (BAU) maintenance compounds the problem: graders re-cut drains and remove verge vegetation, leaving bare, erodible soil to scour in the next storm. Because disaster recovery funding generally reinstates roads only to their pre-disaster standard (Commonwealth of Australia, 2018), Council is locked into a cycle of washout, regrading and renewed erosion (Doshi, 2026).'));
 body.push(H2('Environmental, Social and Economic Implications'));
-body.push(P('Environmentally, the study roads lose about 38 t/ha/yr of fine sediment (<20 µm) toward the GBR, compared with natural rates below 2 t/ha/yr (Shellberg et al., 2026). Fine sediment raises turbidity, reducing the light available to seagrass and coral and degrading reef habitat (Waterhouse et al., 2024). Socially, washouts close roads that remote and Indigenous communities depend on, increase vehicle wear and create safety risks. Economically, Council spends about $20,000/km/yr re-grading these roads (Shellberg et al., 2026), while governments separately fund Reef programs to reduce the same sediment. Sediment delivery is therefore a negative externality: its damage is not borne by the road manager, so maintenance decisions under-weight it (Field & Field, 2024).'));
+body.push(P('The study roads lose about 38 t/ha/yr of fine sediment (<20 µm) toward the GBR, against natural rates below 2 t/ha/yr (Shellberg et al., 2026). Fine sediment raises turbidity, reducing light for seagrass and coral and degrading reef habitat (Waterhouse et al., 2024). Washouts close roads that remote and Indigenous communities depend on, increase vehicle wear and create safety risks. Council spends about $20,000/km/yr re-grading these roads (Shellberg et al., 2026), while governments separately fund Reef programs to reduce the same sediment. Sediment delivery is therefore a negative externality that maintenance decisions under-weight (Field & Field, 2024).'));
 body.push(H2('Project Goals and Scenarios'));
-body.push(P('Natural Capital & Climate was engaged by South Cape York Catchments and Cook Shire Council to identify the most cost-effective and economically efficient way to reduce fine-sediment delivery from 21.5 km of Oaky Creek and Percy Roads (Doshi et al., 2026). Four scenarios were assessed over 30 years (Table 1).'));
+body.push(P('South Cape York Catchments and Cook Shire Council sought the most cost-effective and economically efficient way to reduce fine-sediment delivery from Oaky Creek and Percy Roads (Doshi et al., 2026). Four scenarios were assessed (Table 1).'));
 
 body.push(label('Table 1'), caption('Road Management Scenarios and Modelled Fine-Sediment Delivery'),
   table([2000, 4926, 1150, 1150], [
@@ -95,9 +99,13 @@ body.push(label('Table 1'), caption('Road Management Scenarios and Modelled Fine
   ], [0, 1]),
   note('Erosion rates from Shellberg et al. (2026); descriptions from Doshi (2026). Delivery is calculated over the 10.0 km of crest-to-crest stream-crossing sections that drain to waterways.'));
 
-body.push(H1('Cost-Effectiveness Analysis'));
-body.push(P('Lifecycle financial costs (capital, maintenance and vegetation management) were discounted at 7% over FY2026–FY2055, with FY2026 as year 1 (Infrastructure Australia, 2021). Capital works occur in FY2026, when roads are still maintained at BAU cost; reduced maintenance, vegetation management, seal maintenance and lower erosion rates in S3 and S4 apply from FY2027 (Appendix A). Cost-effectiveness is each scenario’s total present value (PV) of financial costs divided by the fine sediment it avoids relative to BAU over 30 years (Table 2).'));
+body.push(H1('Methodology'));
+body.push(P('Each scenario is compared with BAU using the with-and-without principle (Field & Field, 2024). Cost-effectiveness analysis (CEA) divides each scenario’s total present value (PV) of financial costs by the fine sediment it avoids relative to BAU. Cost-benefit analysis (CBA) values avoided sediment with an avoided abatement cost and adds maintenance savings to estimate net present value (NPV) relative to BAU. All values are real FY2026 dollars discounted at 7% over FY2026–FY2055, with FY2026 as year 1 (Infrastructure Australia, 2021). Sensitivity tests vary the discount rate, sediment value, capital cost and erosion rates.'));
 
+body.push(H1('Key Assumptions and Data'));
+body.push(P('Costs come from Cook Shire Council and erosion rates from Shellberg et al. (2026). Capital works occur in FY2026, when roads are still maintained at BAU cost and erosion; in S3 and S4, reduced maintenance, vegetation management, seal maintenance and lower erosion rates begin in FY2027, while S2 changes apply from FY2026. Sediment avoided is valued at $1,624/t in FY2024 dollars (Doshi et al., 2026), indexed by the ratio of financial-year average CPI (ABS, 2026) to $1,725/t. Resealing is not modelled. Full assumptions are in Appendix A.'));
+
+body.push(H1('Cost-Effectiveness Analysis'));
 body.push(label('Table 2'), caption('Cost-Effectiveness of Fine-Sediment Reduction Relative to BAU'),
   table([2300, 1350, 1350, 1350, 1450, 1426], [
     ['Scenario', 'PV financial cost ($M)', 'Avoided from FY2027 (t/yr)', 'Avoided, 30 years (t)', 'Cost-effectiveness ($/t)', 'Net cost vs BAU ($/t)'],
@@ -107,18 +115,17 @@ body.push(label('Table 2'), caption('Cost-Effectiveness of Fine-Sediment Reducti
     ['S4 Full betterment', '6.81', '377', '10,938', '622', '140'],
   ]),
   note('PV at 7%, FY2026 dollars. Net cost is the PV of financial costs above BAU per tonne avoided; negative values are savings. Calculations are in the accompanying spreadsheet.'));
-
-body.push(P('S4 is the most cost-effective scenario at $622/t. Although it has the highest lifecycle cost, it cuts sediment delivery by 68%, spreading that cost across four times more tonnes than S2. S2 is the cheapest scenario but the least cost-effective ($1,553/t) because it avoids only 16% of BAU sediment. Measured against BAU, however, S2 saves $443 per tonne avoided, making it a no-regret first step, while S3 and S4 cost $180 and $140 per tonne more than BAU (Figure 1).'));
-body.push(P('Incremental analysis strengthens this result. Moving from S2 to S3 costs $571 per additional tonne, but moving from S3 to S4 costs only $75, because the dust seal removes most remaining surface erosion while cutting ongoing costs from $323,000 to $148,000 per year. Every option is far cheaper than the $1,624/t Reef Trust paid for gully remediation on Cape York (Shellberg et al., 2026). CEA nonetheless has limits: it measures a single outcome, ignores access, safety and biodiversity co-benefits, and divides discounted costs by undiscounted tonnes, implicitly valuing a tonne avoided in 2055 the same as one avoided today.'));
+body.push(P('S4 is the most cost-effective scenario at $622/t. Despite the highest lifecycle cost, it cuts delivery by 68%, spreading that cost across four times more tonnes than S2. S2 is the cheapest scenario but the least cost-effective ($1,553/t) because it avoids only 16% of BAU sediment, although it saves $443 per tonne relative to BAU (Figure 1).'));
+body.push(P('Incremental analysis reinforces this. Moving from S2 to S3 costs $571 per additional tonne, but moving from S3 to S4 costs only $75, because the seal removes most remaining surface erosion while cutting ongoing costs from $323,000 to $148,000 per year. CEA nonetheless values a single outcome, ignores co-benefits and divides discounted costs by undiscounted tonnes.'));
 
 body.push(label('Figure 1'), caption('Cost-Effectiveness and Annual Fine Sediment Avoided by Scenario'),
   chart(1), note('Columns show PV financial cost per tonne avoided (left axis); the line shows annual sediment avoided relative to BAU from FY2027 (right axis).'));
 
 body.push(H1('Cost-Benefit Analysis'));
 body.push(H2('Identifying and Valuing Benefits'));
-body.push(P('Two benefits were quantified. First, reduced road maintenance is captured as lower financial costs than BAU. Second, avoided fine sediment was valued using an avoided abatement (replacement) cost: the amount society would otherwise pay to remove an equivalent tonne through Reef water-quality projects. The Cape York Reef Trust benchmark of $1,624/t in FY2024 dollars (Doshi et al., 2026; Shellberg et al., 2026) was indexed to FY2026 using the ratio of financial-year average CPI (ABS, 2026), a factor of 1.0624, giving $1,725/t. Weed and biosecurity control, biodiversity, road safety, fewer closures and lower vehicle wear were not quantified (Doshi, 2026), so the NPVs are conservative.'));
+body.push(P('Two benefits were quantified. Reduced road maintenance is captured as lower financial costs than BAU. Avoided fine sediment is valued at the avoided abatement (replacement) cost of $1,725/t: what society would otherwise pay to remove an equivalent tonne through Reef water-quality projects (Doshi et al., 2026). Weed control, biodiversity, road safety, fewer closures and vehicle wear were not quantified (Doshi, 2026), so the NPVs are conservative.'));
 body.push(H2('Net Present Values'));
-body.push(P('All three alternatives deliver positive NPVs relative to BAU (Table 3). S4 ranks first at $5.93M, followed by S3 ($3.44M) and S2 ($3.05M), within the $2.9M–$7.8M range published by Doshi et al. (2026). Only S2 has a positive financial NPV ($1.17M); S3 and S4 cost more than BAU in financial terms, so their case rests on the sediment benefit (Figure 2). S4 remains first at 4% and 10% discount rates (NPVs of $10.29M and $3.32M).'));
+body.push(P('All alternatives deliver positive NPVs (Table 3): S4 $5.93M, S3 $3.44M and S2 $3.05M. Only S2 has a positive financial NPV ($1.17M); S3 and S4 rely on the sediment benefit (Figure 2). S4 remains first at 4% and 10% discount rates ($10.29M and $3.32M) and when erosion is 20% higher in every scenario ($7.42M).'));
 
 body.push(label('Table 3'), caption('Net Present Value Relative to BAU (AUD Million, 7%, FY2026 Dollars)'),
   table([2900, 1650, 1650, 1700, 1326], [
@@ -127,15 +134,15 @@ body.push(label('Table 3'), caption('Net Present Value Relative to BAU (AUD Mill
     ['S3 Major erosion control', '−1.23', '4.67', '3.44', '2'],
     ['S4 Full betterment', '−1.54', '7.47', '5.93', '1'],
   ]),
-  note('A benefit–cost ratio is not reported because benefits include avoided costs, making the ratio sensitive to how items are classified.'));
+  note('A benefit–cost ratio is not reported because benefits include avoided costs, making the ratio sensitive to how items are classified. Sensitivity results are in the spreadsheet’s Sensitivity sheet.'));
 
 body.push(label('Figure 2'), caption('Composition of NPV by Scenario'),
   chart(2), note('Financial NPV is avoided BAU maintenance less capital and new operating costs. Diamonds show total NPV.'));
 
 body.push(H2('Challenges in Valuing Non-Market Benefits'));
-body.push(P('The avoided abatement cost is a cost-based proxy rather than a willingness-to-pay measure. It is valid only if society would otherwise fund equivalent abatement, and it may understate the non-use and tourism values of a healthier reef (Field & Field, 2024). The link between tonnes delivered and reef condition is also non-linear and uncertain, so a constant per-tonne value simplifies the damage function.'));
-body.push(P('The value itself is uncertain because abatement costs vary widely between projects, and a 2015–2021 benchmark may understate current costs. Figure 3 shows that S4 has the highest NPV for any value above $836/t, and a positive NPV above $355/t. The base value is about twice the switching value, so the ranking is reasonably robust, but evidence of abatement costs below $836/t would favour S2.'));
-body.push(P('Double counting must also be avoided. Maintenance savings are counted once, as lower costs, not again as benefits, and the sediment value should not be added to separate estimates of reef tourism or habitat value because both measure the same outcome. Distribution matters too: Council and local ratepayers bear the capital cost, whereas Reef benefits accrue to Queensland, national and international beneficiaries. This mismatch helps explain under-investment and justifies cost sharing by Reef funders.'));
+body.push(P('The avoided abatement cost is a cost-based proxy rather than a willingness-to-pay measure. It is valid only if society would otherwise fund equivalent abatement, and it may understate the non-use and tourism values of a healthier reef (Field & Field, 2024). The link between tonnes delivered and reef condition is also non-linear, so a constant per-tonne value simplifies the damage function.'));
+body.push(P('The value itself is uncertain because abatement costs vary widely between projects. Figure 3 shows that S4 has the highest NPV for any value above $836/t and a positive NPV above $355/t. The base value is about twice the switching value, so the ranking is reasonably robust, but evidence of abatement costs below $836/t would favour S2.'));
+body.push(P('Double counting must be avoided: maintenance savings are counted once, as lower costs, and the sediment value should not be added to separate reef tourism or habitat values that measure the same outcome. Distribution also matters, because Council bears the capital cost while Reef benefits accrue to Queensland, national and international beneficiaries, which justifies cost sharing.'));
 
 body.push(label('Figure 3'), caption('Sensitivity of NPV to the Avoided Abatement Cost Value'),
   chart(3), note('Lines show NPV (financial + environmental) as the per-tonne value changes, with all other inputs at base values.'));
@@ -151,13 +158,17 @@ body.push(label('Table 4'), caption('Summary of CEA and CBA Results'),
     ['FY2026 capital outlay, $M', '0', '2.47', '4.95'],
   ]),
   note('Derived from Tables 2 and 3.'));
-body.push(P('CEA and CBA rank the scenarios identically, with S4 first (Table 4), which strengthens the recommendation. They answer different questions, however. CEA identifies the cheapest way to achieve a water-quality outcome without valuing it, so it is robust to uncertainty in the per-tonne value. CBA shows whether benefits exceed costs and by how much, but its ranking depends on that value. A purely financial view gives a third answer: S2 is the only scenario that saves money.'));
-body.push(P('Each decision-maker can use the analyses differently. Council, facing annual budget constraints, sees S2 as cheapest and S4 as requiring $4.95M of capital. Reef investors such as Reef Trust, allocating funds against water-quality targets, would use CEA and find S4 at $622/t strong value. Disaster recovery agencies can use the CBA to justify funding betterment instead of like-for-like reinstatement, since S4 cuts ongoing costs from $425,000 to $148,000 per year. Combining these funding sources maximises value from public money.'));
-body.push(P('The time frame also shapes conclusions. On an annual budget view, S4 costs $5.37M in FY2026 against $0.42M for BAU, and its savings take until FY2045 to repay that outlay in undiscounted terms. Agencies assessing options year to year will therefore reject betterment that a 30-year lifecycle analysis supports.'));
+body.push(P('CEA and CBA rank the scenarios identically, with S4 first (Table 4). CEA identifies the cheapest way to achieve a water-quality outcome and is robust to valuation uncertainty; CBA shows whether benefits exceed costs, but its ranking depends on the per-tonne value. A purely financial view favours S2, the only option that saves money.'));
+body.push(P('Decision-makers will use these results differently. Council, facing annual budgets, will see S4’s $4.95M capital outlay as unaffordable. Reef investors allocating funds against water-quality targets can use CEA to see S4 as strong value, while disaster recovery agencies can use CBA to justify funding betterment rather than like-for-like reinstatement. S4 costs $5.37M in FY2026 against $0.42M for BAU and repays this only by FY2045, explaining why short-term budget decisions reject it.'));
 
 body.push(H1('Conclusion'));
-body.push(P('S4 full betterment is recommended as the most cost-effective ($622/t) and economically efficient (NPV $5.93M) scenario. It should be staged: Council can adopt S2 maintenance practices immediately because they save money while reducing sediment, followed by crossing works and then the dust seal, funded by combining betterment and Reef water-quality funding to overcome S4’s negative financial NPV. The central trade-off is a large upfront cost and financial risk against greater long-term environmental gains.'));
-body.push(P('Several factors affect long-term success. More intense rainfall under climate change (CSIRO & Bureau of Meteorology, 2024) will increase BAU erosion and repair costs, strengthening the case for betterment. Remoteness and short dry-season construction windows may raise capital costs, although S4 stays ahead of S2 unless capital rises by more than 60%. The simplified model excludes resealing around year 20, which would reduce S4’s advantage. Disaster funding rules requiring like-for-like rebuilding are the main barrier and should be reformed, and the transition will affect local contractors who depend on recovery work. Post-works erosion monitoring should verify the modelled reductions.'));
+body.push(P('S4 is economically efficient but financially infeasible for Council without co-funding. It delivers the highest NPV and lowest cost per tonne, and this holds across discount rates, a 60% capital overrun and a stress test with 20% higher erosion in every scenario, reflecting the more intense rainfall expected under climate change (CSIRO & Bureau of Meteorology, 2024). The key uncertainties are the per-tonne value (S4 leads only above $836/t), remote construction costs, unmodelled resealing and the transition for local contractors who depend on recovery work.'));
+
+body.push(H1('Recommendations'));
+body.push(LI(1, 'Adopt S2 maintenance practices across the network now as an interim, no-regret step that saves $1.17M in PV while reducing sediment.'));
+body.push(LI(2, 'Deliver S4 in stages, starting with crossing works, co-funded by Reef water-quality programs and disaster betterment funding.'));
+body.push(LI(3, 'Seek reform of disaster funding rules so betterment can replace like-for-like reinstatement.'));
+body.push(LI(4, 'Monitor post-works erosion and refine the abatement value before committing to the dust seal.'));
 
 // ---------------- DOCUMENT ----------------
 const words = bodyWords.join(' ').split(/\s+/).filter((w) => /[A-Za-z0-9$%]/.test(w)).length;
@@ -186,7 +197,7 @@ const references = [
   ref('Commonwealth of Australia. (2018). *Disaster recovery funding arrangements 2018*. Department of Home Affairs.'),
   ref('CSIRO & Bureau of Meteorology. (2024). *State of the climate 2024*. Commonwealth of Australia.'),
   ref('Doshi, A. (2026). *Unsealed road management in Cook Shire* [Guest lecture]. ECON3700 Environmental Economics, The University of Queensland.'),
-  ref('Doshi, A., [[Erlandsen, X.]], [[Charlton-Henderson, X.]], [[Joyse, X.]], & [[Nyman, X.]] (2026). Incorporating fine sediment pollution impacts into unsealed road management: A case study from the Great Barrier Reef catchment area. *Environmental Management, 76*(4), Article 128. https://doi.org/10.1007/s00267-026-02423-2'),
+  ref('Doshi, A., Erlandsen, A., Charlton-Henderson, S., Joyse, K., & Nyman, P. (2026). Incorporating fine sediment pollution impacts into unsealed road management: A case study from the Great Barrier Reef catchment area. *Environmental Management, 76*(4), Article 128. https://doi.org/10.1007/s00267-026-02423-2'),
   ref('Field, B. C., & Field, M. K. (2024). *Environmental economics: An introduction* (9th ed.). McGraw Hill.'),
   ref('Infrastructure Australia. (2021). *Guide to economic appraisal: Technical guide of the Assessment Framework*. Australian Government.'),
   ref('Shellberg, J. G., Klye, D., Price-Decle, J., Russell-Smith, P., Cook, K., Peter, T., Gambold, I., & Dobson, J. (2026). Quantifying fine sediment erosion from unsealed roads draining to the Great Barrier Reef before and after applying best management practices. *Environmental Management, 76*, Article 34. https://doi.org/10.1007/s00267-025-02327-7'),
@@ -207,7 +218,8 @@ const appendix = [
     ['S3', 'FY2026 at BAU maintenance and erosion; from FY2027, 70% maintenance, vegetation management (year-1 rates in FY2027) and 31.7 t/km/yr'],
     ['S4', 'FY2026 at BAU gravel maintenance and erosion; from FY2027, seal maintenance ($5,500/km), drain cleaning ($200/km), vegetation management (year-1 rates in FY2027) and 17.6 t/km/yr; no separate reseal'],
     ['Vegetation management', 'Grader grass $1,500/km (years 1–2) then $800/km; woody weeds $2,705, $1,122, $650, then $400/km'],
-    ['Sediment value', '$1,624/t (FY2024) × CPI factor 1.0624 (FY2025-26 / FY2023-24 average CPI) = $1,725/t (FY2026)'],
+    ['Sediment value', '$1,624/t in FY2024 dollars (Doshi et al., 2026) × CPI factor 1.0624 (FY2025-26 / FY2023-24 average CPI) = $1,725/t (FY2026)'],
+    ['Sensitivity tests', 'Discount rates 4% and 10%; per-tonne value $0–$3,500; capital +60%; erosion rates +20% in every scenario; payback on undiscounted financial costs'],
     ['Cost-effectiveness', 'Total PV financial cost ÷ undiscounted tonnes avoided relative to BAU over 30 years'],
   ], [0, 1]),
 ];

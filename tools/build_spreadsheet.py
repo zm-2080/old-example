@@ -24,6 +24,7 @@ assert YEARS[0] == 'C' and YEARS[-1] == 'AF'
 inputs, dcf = {}, {}
 
 # ---------- Inputs sheet: avoided abatement cost and CPI indexation ----------
+inputs['C5'] = 'C4+C3-1'          # last appraisal year, FY2055 (Q&A 3)
 inputs['C40'] = '1624'          # Doshi et al. (2026): Reef Trust Cape York gully abatement cost, FY2024 $
 inputs['C41'] = 'C48/C45'       # FY2026 average CPI / FY2024 average CPI
 inputs['C42'] = 'C40*C41'
@@ -142,6 +143,107 @@ for col in 'CDE':
     dcf[f'{col}79'] = f'{col}67/{col}78'   # total PV financial cost / tonnes avoided (Q&A 6)
 
 
+# ---------- Sensitivity sheet (new sheet, all live formulas) ----------
+# cell -> (content, style); content starting with '=' is a formula, str is text, number is an input
+TITLE, HEAD, COLH, LABEL, GEN, PCT, CUR, CURT, PCTOUT = 3, 16, 55, 9, 13, 41, 46, 71, 11
+sens = {}
+SC = {'B': 'C', 'C': 'D', 'D': 'E'}                  # Sensitivity col -> DCF results col (S2, S3, S4)
+TOT = {'B': 32, 'C': 45, 'D': 62}; FIN = {'B': 29, 'C': 42, 'D': 59}
+
+
+def colhead(r, first):
+    sens[f'A{r}'] = (first, COLH)
+    for c, name in zip('BCD', ('S2 Alternative maintenance', 'S3 Major erosion control', 'S4 Full betterment')):
+        sens[f'{c}{r}'] = (name, COLH)
+
+
+sens['A1'] = ('Sensitivity analysis: NPV and cost-effectiveness relative to BAU (live-linked to Inputs and DCF)', TITLE)
+sens['A3'] = ('1. Discount rate', HEAD)
+sens['A4'] = ('Low discount rate', LABEL); sens['B4'] = (0.04, PCT)
+sens['A5'] = ('High discount rate', LABEL); sens['B5'] = (0.10, PCT)
+colhead(6, 'NPV relative to BAU ($)')
+rows = [(7, 'NPV (financial + environmental) at base rate (DCF)', lambda c: f'=DCF!{SC[c]}75'),
+        (8, 'NPV (financial + environmental) at low rate', lambda c: f'=NPV($B$4,DCF!$C$22:$AF$22)-NPV($B$4,DCF!$C${TOT[c]}:$AF${TOT[c]})'),
+        (9, 'NPV (financial + environmental) at high rate', lambda c: f'=NPV($B$5,DCF!$C$22:$AF$22)-NPV($B$5,DCF!$C${TOT[c]}:$AF${TOT[c]})'),
+        (10, 'Financial NPV at low rate', lambda c: f'=NPV($B$4,DCF!$C$19:$AF$19)-NPV($B$4,DCF!$C${FIN[c]}:$AF${FIN[c]})'),
+        (11, 'Financial NPV at high rate', lambda c: f'=NPV($B$5,DCF!$C$19:$AF$19)-NPV($B$5,DCF!$C${FIN[c]}:$AF${FIN[c]})')]
+sens['A13'] = ('2. Capital cost overrun (S3 and S4 capital works in FY2026)', HEAD)
+sens['A14'] = ('Capital cost increase tested', LABEL); sens['B14'] = (0.6, PCT)
+colhead(15, 'Measure')
+CAP = {'B': '0', 'C': 'SUM(DCF!$B$35:$B$37)', 'D': 'SUM(DCF!$B$48:$B$52)'}
+rows += [(16, 'PV of capital costs ($)', lambda c: f'={CAP[c]}'),
+         (17, 'NPV (financial + environmental) with capital increase ($)', lambda c: f'={c}7-$B$14*{c}16')]
+sens['A18'] = ('Capital increase at which S4 NPV falls to S2 NPV', LABEL); sens['D18'] = ('=(D7-B7)/D16', PCTOUT)
+sens['A19'] = ('Capital increase at which NPV falls to zero', LABEL)
+sens['C19'] = ('=C7/C16', PCTOUT); sens['D19'] = ('=D7/D16', PCTOUT)
+sens['A21'] = ('3. Climate stress test: higher erosion rates in every scenario', HEAD)
+sens['A22'] = ('Increase in erosion rates (all scenarios, all years)', LABEL); sens['B22'] = (0.2, PCT)
+colhead(23, 'Measure')
+rows += [(24, 'NPV (financial + environmental) with higher erosion ($)', lambda c: f'=DCF!{SC[c]}74+(1+$B$22)*DCF!{SC[c]}72'),
+         (25, 'Cost-effectiveness with higher erosion ($/t)', lambda c: f'=DCF!{SC[c]}67/((1+$B$22)*DCF!{SC[c]}78)')]
+sens['A26'] = ('Financial costs are unchanged; tonnes avoided and their value scale with the erosion rates.', LABEL)
+sens['A28'] = ('4. Payback of upfront costs against BAU (undiscounted financial costs, see table 6)', HEAD)
+colhead(29, 'Measure')
+rows += [(30, 'First year cumulative savings repay the outlay', lambda c: f'=IF(COUNTIF({c}$58:{c}$87,">0")=30,"Beyond FY2055",Inputs!$C$4+COUNTIF({c}$58:{c}$87,">0"))')]
+sens['A31'] = ('S4 discounted net cost still unrecovered at FY2055 ($)', LABEL); sens['D31'] = ('=E87', CUR)
+sens['A33'] = ('5. NPV by avoided abatement cost value (Figure 3 data)', HEAD)
+colhead(34, 'Value ($/t, FY2026)')
+for i in range(15):
+    r = 35 + i
+    sens[f'A{r}'] = ((0 if i == 0 else f'=A{r - 1}+250'), GEN)
+    for c in 'BCD':
+        sens[f'{c}{r}'] = (f'=DCF!{SC[c]}$74+DCF!{SC[c]}$72*$A{r}/Inputs!$C$42', CUR)
+sens['A51'] = ('Value at which S4 NPV overtakes S2 ($/t)', LABEL); sens['B51'] = ('=(DCF!C74-DCF!E74)/((DCF!E72-DCF!C72)/Inputs!C42)', CURT)
+sens['A52'] = ('Value at which S4 NPV overtakes S3 ($/t)', LABEL); sens['B52'] = ('=(DCF!D74-DCF!E74)/((DCF!E72-DCF!D72)/Inputs!C42)', CURT)
+sens['A53'] = ('Value at which S4 NPV is zero ($/t)', LABEL); sens['B53'] = ('=-DCF!E74/(DCF!E72/Inputs!C42)', CURT)
+sens['A55'] = ('6. Cumulative net financial cost relative to BAU (positive = outlay not yet repaid)', HEAD)
+colhead(56, 'Financial year')
+sens['E56'] = ('S4 discounted', COLH)
+for i in range(30):
+    r = 58 + i
+    n = f'($A{r}-Inputs!$C$4+1)'
+    sens[f'A{r}'] = (f'=INDEX(DCF!$C$13:$AF$13,{i + 1})', GEN)
+    for c in 'BCD':
+        step = f'INDEX(DCF!$C${FIN[c]}:$AF${FIN[c]},{n})-INDEX(DCF!$C$19:$AF$19,{n})'
+        sens[f'{c}{r}'] = ((f'={step}' if i == 0 else f'={c}{r - 1}+{step}'), CUR)
+    dstep = f'(INDEX(DCF!$C$59:$AF$59,{n})-INDEX(DCF!$C$19:$AF$19,{n}))*INDEX(DCF!$C$14:$AF$14,{n})'
+    sens[f'E{r}'] = ((f'={dstep}' if i == 0 else f'=E{r - 1}+{dstep}'), CUR)
+for r, label, fn in rows:
+    sens[f'A{r}'] = (label, LABEL)
+    for c in 'BCD':
+        sens[f'{c}{r}'] = (fn(c), GEN if r == 30 else (CURT if r == 25 else CUR))
+
+
+def sheet3_xml(values):
+    by_row = {}
+    for ref, (content, style) in sens.items():
+        col, row = re.match(r'([A-Z]+)(\d+)', ref).groups()
+        by_row.setdefault(int(row), []).append((col, ref, content, style))
+    out = []
+    for r in sorted(by_row):
+        cells = []
+        for col, ref, content, style in sorted(by_row[r], key=lambda x: (len(x[0]), x[0])):
+            if isinstance(content, str) and content.startswith('='):
+                v = (values or {}).get(ref)
+                if isinstance(v, str):
+                    cells.append(f'<c r="{ref}" s="{style}" t="str"><f>{escape(content[1:])}</f><v>{escape(v)}</v></c>')
+                else:
+                    cells.append(f'<c r="{ref}" s="{style}"><f>{escape(content[1:])}</f>{fmt_v(v)}</c>')
+            elif isinstance(content, str):
+                cells.append(f'<c r="{ref}" s="{style}" t="inlineStr"><is><t>{escape(content)}</t></is></c>')
+            else:
+                cells.append(f'<c r="{ref}" s="{style}"><v>{content!r}</v></c>')
+        out.append(f'<row r="{r}">{"".join(cells)}</row>')
+    return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+            'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            '<sheetPr><tabColor theme="5" tint="0.79998168889431442"/></sheetPr><dimension ref="A1:E87"/>'
+            '<sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/>'
+            '<cols><col min="1" max="1" width="78" style="1" customWidth="1"/><col min="2" max="5" width="22" style="1" customWidth="1"/></cols>'
+            f'<sheetData>{"".join(out)}</sheetData>'
+            '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/></worksheet>')
+
+
 def fmt_v(v):
     return f'<v>{repr(float(v))}</v>' if v is not None else ''
 
@@ -183,10 +285,13 @@ def build(dst, values=None):
             continue  # Excel rebuilds it
         if name == '[Content_Types].xml':
             data = re.sub(rb'<Override PartName="/xl/calcChain.xml"[^>]*/>', b'', data)
+            data = data.replace(b'</Types>', b'<Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>')
         if name == 'xl/_rels/workbook.xml.rels':
             data = re.sub(rb'<Relationship [^>]*Target="calcChain.xml"/>', b'', data)
+            data = data.replace(b'</Relationships>', b'<Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/></Relationships>')
         if name == 'xl/workbook.xml':
             s = data.decode()
+            s = s.replace('<sheet name="DCF" sheetId="2" r:id="rId2"/>', '<sheet name="DCF" sheetId="2" r:id="rId2"/><sheet name="Sensitivity" sheetId="3" r:id="rId7"/>')
             s = re.sub(r'<calcPr ([^/]*)/>', lambda m: '<calcPr ' + re.sub(r'\s*fullCalcOnLoad="\d"', '', m.group(1)) + ' fullCalcOnLoad="1"/>', s)
             data = s.encode()
         if name == 'xl/worksheets/sheet1.xml':
@@ -194,9 +299,12 @@ def build(dst, values=None):
             s = s.replace('</sheetData>', cpi_rows((values or {}).get('Inputs')) + '</sheetData>')
             s = s.replace('<dimension ref="A1:D42"/>', '<dimension ref="A1:D48"/>')
             data = s.encode()
+        if name == 'docProps/app.xml':
+            data = data.replace(b'<vt:i4>2</vt:i4>', b'<vt:i4>3</vt:i4>').replace(b'<vt:vector size="2" baseType="lpstr"><vt:lpstr>Inputs</vt:lpstr><vt:lpstr>DCF</vt:lpstr>', b'<vt:vector size="3" baseType="lpstr"><vt:lpstr>Inputs</vt:lpstr><vt:lpstr>DCF</vt:lpstr><vt:lpstr>Sensitivity</vt:lpstr>')
         if name == 'xl/worksheets/sheet2.xml':
             data = inject(data.decode(), dcf, (values or {}).get('DCF')).encode()
         zout.writestr(item, data)
+    zout.writestr('xl/worksheets/sheet3.xml', sheet3_xml((values or {}).get('Sensitivity')).encode())
     zout.close()
 
 
@@ -209,8 +317,9 @@ subprocess.run(['soffice', '--headless', '--calc', '--convert-to', 'xlsx', '--ou
 wb = openpyxl.load_workbook(os.path.join(WORK, 'lo', 'stage1.xlsx'), data_only=True)
 cpi_refs = {f'C{r}': None for r, kind, *_ in CPI_ROWS if kind == 'row'}
 values = {'Inputs': {k: wb['Inputs'][k].value for k in list(inputs) + list(cpi_refs)},
-          'DCF': {k: wb['DCF'][k].value for k in dcf}}
-missing = [k for s in values for k, v in values[s].items() if not isinstance(v, (int, float))]
+          'DCF': {k: wb['DCF'][k].value for k in dcf},
+          'Sensitivity': {k: wb['Sensitivity'][k].value for k, (c, _) in sens.items() if isinstance(c, str) and c.startswith('=')}}
+missing = [k for s in values for k, v in values[s].items() if not isinstance(v, (int, float)) and not (s == 'Sensitivity' and isinstance(v, str))]
 if missing:
     raise SystemExit(f'non-numeric results: {missing[:10]}')
 build(OUT, values)
