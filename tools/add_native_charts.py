@@ -141,14 +141,14 @@ fig1 = (
     f'<c:cat>{strref("Sheet1!$A$2:$A$4", CATS)}</c:cat><c:val>{numref("Sheet1!$B$2:$B$4", ce)}</c:val></c:ser>'
     '<c:gapWidth val="70"/><c:axId val="101"/><c:axId val="102"/></c:barChart>'
     '<c:lineChart><c:grouping val="standard"/><c:varyColors val="0"/>'
-    f'<c:ser><c:idx val="1"/><c:order val="1"/><c:tx>{strref("Sheet1!$C$1", ["Fine sediment avoided (t/yr, from FY2027)"])}</c:tx>'
+    f'<c:ser><c:idx val="1"/><c:order val="1"/><c:tx>{strref("Sheet1!$C$1", ["Fine sediment avoided per year at full effect (t/yr)"])}</c:tx>'
     f'<c:spPr>{line("C98B3D", 25400)}</c:spPr><c:marker><c:symbol val="circle"/><c:size val="7"/><c:spPr>{fill("C98B3D")}<a:ln><a:noFill/></a:ln></c:spPr></c:marker>'
     f'{dlbls("#,##0", "t")}<c:cat>{strref("Sheet1!$A$2:$A$4", CATS)}</c:cat><c:val>{numref("Sheet1!$C$2:$C$4", tonnes_yr)}</c:val>'
     '<c:smooth val="0"/></c:ser><c:marker val="1"/><c:axId val="103"/><c:axId val="104"/></c:lineChart>'
     + cat_ax(101, 102) + val_ax(102, 101, 'PV financial cost per tonne avoided ($/t)', '"$"#,##0', mn=0, mx=2000, unit=500)
     + cat_ax(103, 104, delete=1) + val_ax(104, 103, 'Fine sediment avoided (t/yr)', '#,##0', pos='r', grid=False, crosses='max', mn=0, mx=400, unit=100)
 )
-wb1 = workbook([['Scenario', 'Cost-effectiveness ($ per tonne avoided)', 'Fine sediment avoided (t/yr, from FY2027)']]
+wb1 = workbook([['Scenario', 'Cost-effectiveness ($ per tonne avoided)', 'Fine sediment avoided per year at full effect (t/yr)']]
                + [[c, v, t] for c, v, t in zip(CATS, ce, tonnes_yr)])
 
 # ---------- Figure 2: NPV composition (stacked columns) with total NPV markers ----------

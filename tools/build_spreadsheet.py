@@ -30,18 +30,30 @@ inputs['C41'] = 'C48/C45'       # FY2026 average CPI / FY2024 average CPI
 inputs['C42'] = 'C40*C41'
 
 # CPI workings block (new rows below the Inputs table)
+Q_IDX = [('Sep-23', 135.3), ('Dec-23', 136.1), ('Mar-24', 137.4), ('Jun-24', 138.8),
+         ('Sep-24', 139.1), ('Dec-24', 139.4), ('Mar-25', 140.7), ('Jun-25', 141.7)]
+M_ANN = [('Jul-25', 3.0), ('Aug-25', 3.2), ('Sep-25', 3.6), ('Oct-25', 3.8), ('Nov-25', 3.4), ('Dec-25', 3.8),
+         ('Jan-26', 3.8), ('Feb-26', 3.7), ('Mar-26', 4.6), ('Apr-26', 4.2), ('May-26', 4.0), ('Jun-26', 3.8)]
+Q0 = 51                      # first quarterly index row
+M0 = Q0 + len(Q_IDX) + 1     # first monthly movement row (after a sub-header)
 CPI_ROWS = [
     (44, 'header', 'CPI indexation workings (ABS, All groups CPI, weighted average of eight capital cities)', '', None, ''),
     (45, 'row', 'FY2023-24 average CPI (2011-12 = 100)', 'index',
-     'AVERAGE(135.3,136.1,137.4,138.8)', 'ABS 6401.0 quarterly index: Sep-23 135.3, Dec-23 136.1, Mar-24 137.4, Jun-24 138.8'),
+     f'AVERAGE(C{Q0}:C{Q0 + 3})', f'Average of the four FY2023-24 quarterly index numbers (rows {Q0}-{Q0 + 3})'),
     (46, 'row', 'FY2024-25 average CPI (2011-12 = 100)', 'index',
-     'AVERAGE(139.1,139.4,140.7,141.7)', 'ABS 6401.0 quarterly index: Sep-24 139.1, Dec-24 139.4, Mar-25 140.7, Jun-25 141.7'),
+     f'AVERAGE(C{Q0 + 4}:C{Q0 + 7})', f'Average of the four FY2024-25 quarterly index numbers (rows {Q0 + 4}-{Q0 + 7})'),
     (47, 'row', 'FY2025-26 year-average CPI inflation', '%',
-     'AVERAGE(3,3.2,3.6,3.8,3.4,3.8,3.8,3.7,4.6,4.2,4,3.8)',
-     'ABS monthly annual CPI movements Jul-25 to Jun-26: 3.0, 3.2, 3.6, 3.8, 3.4, 3.8, 3.8, 3.7, 4.6, 4.2, 4.0, 3.8 (series re-referenced to Sep-25 = 100, so FY2025-26 is chained to FY2024-25)'),
+     f'AVERAGE(C{M0}:C{M0 + 11})',
+     f'Average of the twelve monthly annual movements (rows {M0}-{M0 + 11}); the ABS re-referenced the CPI to Sep-25 = 100, so FY2025-26 is chained to FY2024-25'),
     (48, 'row', 'FY2025-26 average CPI (2011-12 = 100 equivalent)', 'index',
      'C46*(1+C47/100)', 'Calculated'),
-]
+    (50, 'header', 'ABS source data: quarterly All groups CPI index numbers (2011-12 = 100)', '', None, ''),
+] + [(Q0 + k, 'data', f'CPI index, {q} quarter', 'index', v, 'ABS, Consumer Price Index, Australia (6401.0), quarterly index, 2011-12 = 100')
+     for k, (q, v) in enumerate(Q_IDX)] + [
+    (M0 - 1, 'header', 'ABS source data: monthly CPI, annual movement (%)', '', None, ''),
+] + [(M0 + k, 'data', f'CPI annual movement, {m}', '%', v, 'ABS, Consumer Price Index, Australia (monthly releases Dec-25 to Aug-26)')
+     for k, (m, v) in enumerate(M_ANN)]
+CPI_LAST = M0 + len(M_ANN) - 1
 
 # ---------- DCF key parameters ----------
 dcf['B5'] = 'Inputs!C2'
@@ -268,6 +280,9 @@ def cpi_rows(values):
         if kind == 'header':
             out.append(f'<row r="{r}" spans="1:4" s="2" customFormat="1">{txt(f"A{r}", 16, label)}'
                        f'<c r="B{r}" s="17"/><c r="C{r}" s="17"/><c r="D{r}" s="18"/></row>')
+        elif kind == 'data':
+            out.append(f'<row r="{r}" spans="1:4">{txt(f"A{r}", 9, label)}{txt(f"B{r}", 13, unit)}'
+                       f'<c r="C{r}" s="38"><v>{formula!r}</v></c>{txt(f"D{r}", 22, source)}</row>')
         else:
             v = (values or {}).get(f'C{r}')
             out.append(f'<row r="{r}" spans="1:4">{txt(f"A{r}", 9, label)}{txt(f"B{r}", 13, unit)}'
@@ -297,7 +312,7 @@ def build(dst, values=None):
         if name == 'xl/worksheets/sheet1.xml':
             s = inject(data.decode(), inputs, (values or {}).get('Inputs'))
             s = s.replace('</sheetData>', cpi_rows((values or {}).get('Inputs')) + '</sheetData>')
-            s = s.replace('<dimension ref="A1:D42"/>', '<dimension ref="A1:D48"/>')
+            s = s.replace('<dimension ref="A1:D42"/>', f'<dimension ref="A1:D{CPI_LAST}"/>')
             data = s.encode()
         if name == 'docProps/app.xml':
             data = data.replace(b'<vt:i4>2</vt:i4>', b'<vt:i4>3</vt:i4>').replace(b'<vt:vector size="2" baseType="lpstr"><vt:lpstr>Inputs</vt:lpstr><vt:lpstr>DCF</vt:lpstr>', b'<vt:vector size="3" baseType="lpstr"><vt:lpstr>Inputs</vt:lpstr><vt:lpstr>DCF</vt:lpstr><vt:lpstr>Sensitivity</vt:lpstr>')
