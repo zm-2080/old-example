@@ -275,6 +275,27 @@ for r, label, src in tests:
     sens[f'E{r}'] = (f'=INDEX($B$102:$D$102,MATCH(MAX(B{r}:D{r}),B{r}:D{r},0))', GEN)
 
 
+# 9. Supplementary measures quoted in the report text
+SEDR = {'B': 30, 'C': 43, 'D': 60}
+sens['A113'] = ('9. Supplementary measures: discounted tonnes, funding gap relative to S2 and resealing', HEAD)
+colhead(114, 'Measure')
+for c in 'BCD':
+    sens[f'{c}115'] = (f'=SUMPRODUCT(DCF!$C$20:$AF$20-DCF!$C${SEDR[c]}:$AF${SEDR[c]},DCF!$C$14:$AF$14)', GEN)
+    sens[f'{c}116'] = (f'=DCF!{SC[c]}67/{c}115', CURT)
+for c in 'CD':
+    sens[f'{c}117'] = (f'=DCF!{SC[c]}67-DCF!$C$67', CUR)
+    sens[f'{c}118'] = (f'={c}117/(DCF!{SC[c]}78-DCF!$C$78)', CURT)
+sens['A115'] = ('Fine sediment avoided relative to BAU, discounted at the base rate (t)', LABEL)
+sens['A116'] = ('PV financial cost per discounted tonne avoided ($/t)', LABEL)
+sens['A117'] = ('PV financial cost above S2 ($)', LABEL)
+sens['A118'] = ('PV financial cost above S2 per additional tonne avoided ($/t)', LABEL)
+sens['A120'] = ('S4 reseal year tested (not in base case)', LABEL); sens['B120'] = (2046, GEN)
+sens['A121'] = ('PV of one reseal at the dust seal capital rate ($)', LABEL)
+sens['D121'] = ('=INDEX(DCF!$C$14:$AF$14,$B$120-Inputs!$C$4+1)*Inputs!$C$17*DCF!$B$7', CUR)
+sens['A122'] = ('S4 NPV (financial + environmental) including the reseal ($)', LABEL)
+sens['D122'] = ('=DCF!E75-D121', CUR)
+
+
 def sheet3_xml(values):
     by_row = {}
     for ref, (content, style) in sens.items():
@@ -298,7 +319,7 @@ def sheet3_xml(values):
     return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-            '<sheetPr><tabColor theme="5" tint="0.79998168889431442"/></sheetPr><dimension ref="A1:E111"/>'
+            '<sheetPr><tabColor theme="5" tint="0.79998168889431442"/></sheetPr><dimension ref="A1:E122"/>'
             '<sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/>'
             '<cols><col min="1" max="1" width="78" style="1" customWidth="1"/><col min="2" max="5" width="22" style="1" customWidth="1"/></cols>'
             f'<sheetData>{"".join(out)}</sheetData>'
@@ -366,6 +387,10 @@ def build(dst, values=None):
             data = s.encode()
         if name == 'docProps/app.xml':
             data = data.replace(b'<vt:i4>2</vt:i4>', b'<vt:i4>3</vt:i4>').replace(b'<vt:vector size="2" baseType="lpstr"><vt:lpstr>Inputs</vt:lpstr><vt:lpstr>DCF</vt:lpstr>', b'<vt:vector size="3" baseType="lpstr"><vt:lpstr>Inputs</vt:lpstr><vt:lpstr>DCF</vt:lpstr><vt:lpstr>Sensitivity</vt:lpstr>')
+        if name == 'xl/sharedStrings.xml':
+            # Q&A: the initial works year is FY2026, so the template's 'FY2025 only' labels are relabelled
+            assert data.count(b'(gravel, FY2025 only)') == 2
+            data = data.replace(b'(gravel, FY2025 only)', b'(gravel, FY2026 only)')
         if name == 'xl/worksheets/sheet2.xml':
             data = inject(data.decode(), dcf, (values or {}).get('DCF')).encode()
         zout.writestr(item, data)

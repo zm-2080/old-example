@@ -218,7 +218,8 @@ doc = files['word/document.xml'].decode()
 rels = files['word/_rels/document.xml.rels'].decode()
 ct = files['[Content_Types].xml'].decode()
 if 'Extension="xlsx"' not in ct:
-    ct = ct.replace('<Default Extension="xml"', '<Default Extension="xlsx" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/><Default Extension="xml"', 1)
+    # docx-js writes ContentType before Extension, so append rather than anchor on attribute order
+    ct = ct.replace('</Types>', '<Default Extension="xlsx" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/></Types>', 1)
 
 for n, (key, (xml, wbytes, cx, cy)) in enumerate(CHARTS.items(), start=1):
     rid = f'rIdChart{n}'
