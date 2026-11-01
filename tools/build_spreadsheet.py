@@ -30,30 +30,41 @@ inputs['C41'] = 'C48/C45'       # FY2026 average CPI / FY2024 average CPI
 inputs['C42'] = 'C40*C41'
 
 # CPI workings block (new rows below the Inputs table)
-Q_IDX = [('Sep-23', 135.3), ('Dec-23', 136.1), ('Mar-24', 137.4), ('Jun-24', 138.8),
-         ('Sep-24', 139.1), ('Dec-24', 139.4), ('Mar-25', 140.7), ('Jun-25', 141.7)]
-M_ANN = [('Jul-25', 3.0), ('Aug-25', 3.2), ('Sep-25', 3.6), ('Oct-25', 3.8), ('Nov-25', 3.4), ('Dec-25', 3.8),
-         ('Jan-26', 3.8), ('Feb-26', 3.7), ('Mar-26', 4.6), ('Apr-26', 4.2), ('May-26', 4.0), ('Jun-26', 3.8)]
-Q0 = 51                      # first quarterly index row
-M0 = Q0 + len(Q_IDX) + 1     # first monthly movement row (after a sub-header)
+# ABS All groups CPI, weighted average of eight capital cities. FY2023-24 is on the old 2011-12 = 100 base;
+# FY2025-26 is on the re-referenced Sep-25 = 100 base (quarter = average of its three monthly indexes) and is
+# converted to the old base with the Sep-25 quarter link (143.6 on 2011-12 = 100).
+Q_OLD = [('Sep-23', 135.3), ('Dec-23', 136.1), ('Mar-24', 137.4), ('Jun-24', 138.8)]
+LINK_OLD = 143.6
+M_IDX = [('Oct-25', 100.00), ('Nov-25', 100.01), ('Dec-25', 100.97), ('Jan-26', 101.33), ('Feb-26', 101.31),
+         ('Mar-26', 102.44), ('Apr-26', 102.80), ('May-26', 102.09), ('Jun-26', 102.03)]
+Q0 = 51                          # FY2023-24 quarterly index rows 51-54, link quarter row 55
+M0 = 57                          # monthly index rows 57-65
+QN0 = 67                         # FY2025-26 quarterly rows 67-70
+SRC_ABS = 'ABS, Consumer Price Index, Australia'
 CPI_ROWS = [
     (44, 'header', 'CPI indexation workings (ABS, All groups CPI, weighted average of eight capital cities)', '', None, ''),
     (45, 'row', 'FY2023-24 average CPI (2011-12 = 100)', 'index',
      f'AVERAGE(C{Q0}:C{Q0 + 3})', f'Average of the four FY2023-24 quarterly index numbers (rows {Q0}-{Q0 + 3})'),
-    (46, 'row', 'FY2024-25 average CPI (2011-12 = 100)', 'index',
-     f'AVERAGE(C{Q0 + 4}:C{Q0 + 7})', f'Average of the four FY2024-25 quarterly index numbers (rows {Q0 + 4}-{Q0 + 7})'),
-    (47, 'row', 'FY2025-26 year-average CPI inflation', '%',
-     f'AVERAGE(C{M0}:C{M0 + 11})',
-     f'Average of the twelve monthly annual movements (rows {M0}-{M0 + 11}); the ABS re-referenced the CPI to Sep-25 = 100, so FY2025-26 is chained to FY2024-25'),
+    (46, 'row', 'Conversion factor, Sep-25 = 100 to 2011-12 = 100', 'ratio',
+     f'C{Q0 + 4}/C{QN0}', f'Sep-25 quarter on the old base (row {Q0 + 4}) divided by the same quarter on the new base (row {QN0})'),
+    (47, 'row', 'FY2025-26 average CPI (Sep-25 = 100)', 'index',
+     f'AVERAGE(C{QN0}:C{QN0 + 3})', f'Average of the four FY2025-26 quarterly index numbers (rows {QN0}-{QN0 + 3})'),
     (48, 'row', 'FY2025-26 average CPI (2011-12 = 100 equivalent)', 'index',
-     'C46*(1+C47/100)', 'Calculated'),
-    (50, 'header', 'ABS source data: quarterly All groups CPI index numbers (2011-12 = 100)', '', None, ''),
-] + [(Q0 + k, 'data', f'CPI index, {q} quarter', 'index', v, 'ABS, Consumer Price Index, Australia (6401.0), quarterly index, 2011-12 = 100')
-     for k, (q, v) in enumerate(Q_IDX)] + [
-    (M0 - 1, 'header', 'ABS source data: monthly CPI, annual movement (%)', '', None, ''),
-] + [(M0 + k, 'data', f'CPI annual movement, {m}', '%', v, 'ABS, Consumer Price Index, Australia (monthly releases Dec-25 to Aug-26)')
-     for k, (m, v) in enumerate(M_ANN)]
-CPI_LAST = M0 + len(M_ANN) - 1
+     'C47*C46', 'Calculated; indexation factor in C41 = C48 / C45'),
+    (50, 'header', 'ABS source data: quarterly CPI index numbers, 2011-12 = 100 (pre-October 2025 basis)', '', None, ''),
+] + [(Q0 + k, 'data', f'CPI index, {q} quarter', 'index', v, f'{SRC_ABS}, quarterly index, 2011-12 = 100')
+     for k, (q, v) in enumerate(Q_OLD)] + [
+    (Q0 + 4, 'data', 'CPI index, Sep-25 quarter (link period)', 'index', LINK_OLD, f'{SRC_ABS}, September quarter 2025 (last release on the 2011-12 = 100 base)'),
+    (M0 - 1, 'header', 'ABS source data: monthly CPI index numbers, Sep-25 = 100', '', None, ''),
+] + [(M0 + k, 'data2', f'CPI index, {m}', 'index', v, f'{SRC_ABS}, monthly release for {m}, Sep-25 = 100')
+     for k, (m, v) in enumerate(M_IDX)] + [
+    (QN0 - 1, 'header', 'FY2025-26 quarterly CPI, Sep-25 = 100 (ABS: quarter = average of its three monthly indexes)', '', None, ''),
+    (QN0, 'data', 'CPI index, Sep-25 quarter', 'index', 100.0, 'ABS re-referencing link period, Sep-25 quarter = 100.0'),
+    (QN0 + 1, 'row', 'CPI index, Dec-25 quarter', 'index', f'AVERAGE(C{M0}:C{M0 + 2})', 'Average of Oct-25 to Dec-25 monthly indexes'),
+    (QN0 + 2, 'row', 'CPI index, Mar-26 quarter', 'index', f'AVERAGE(C{M0 + 3}:C{M0 + 5})', 'Average of Jan-26 to Mar-26 monthly indexes'),
+    (QN0 + 3, 'row', 'CPI index, Jun-26 quarter', 'index', f'AVERAGE(C{M0 + 6}:C{M0 + 8})', 'Average of Apr-26 to Jun-26 monthly indexes'),
+]
+CPI_LAST = QN0 + 3
 
 # ---------- DCF key parameters ----------
 dcf['B5'] = 'Inputs!C2'
@@ -226,6 +237,44 @@ for r, label, fn in rows:
         sens[f'{c}{r}'] = (fn(c), GEN if r == 30 else (CURT if r == 25 else CUR))
 
 
+# 7. Sediment value range and delivery uncertainty; 8. robustness summary (report Table 4)
+CURIN = 40   # "$"#,##0 input style
+sens['A89'] = ('7. Sediment value range and achieved reductions', HEAD)
+sens['A90'] = ('Low avoided abatement cost value (FY2024 $/t)', LABEL); sens['B90'] = (70, CURIN)
+sens['A91'] = ('High avoided abatement cost value (FY2024 $/t)', LABEL); sens['B91'] = (5000, CURIN)
+sens['A92'] = ('Low value indexed to FY2026 ($/t)', LABEL); sens['B92'] = ('=B90*Inputs!$C$41', CURT)
+sens['A93'] = ('High value indexed to FY2026 ($/t)', LABEL); sens['B93'] = ('=B91*Inputs!$C$41', CURT)
+sens['A94'] = ('Sediment reductions achieved (share of modelled)', LABEL); sens['B94'] = (0.8, PCT)
+colhead(95, 'NPV relative to BAU ($)')
+for c in 'BCD':
+    fin, ben = f'DCF!{SC[c]}$74', f'DCF!{SC[c]}$72'
+    sens[f'{c}96'] = (f'={fin}+{ben}*$B$92/Inputs!$C$42', CUR)
+    sens[f'{c}97'] = (f'={fin}+{ben}*$B$93/Inputs!$C$42', CUR)
+    sens[f'{c}98'] = (f'={fin}+$B$94*{ben}', CUR)
+    sens[f'{c}99'] = (f'={fin}+$B$94*{ben}-$B$14*{c}$16', CUR)
+sens['A96'] = ('NPV at low value', LABEL)
+sens['A97'] = ('NPV at high value', LABEL)
+sens['A98'] = ('NPV with reductions at the achieved share', LABEL)
+sens['A99'] = ('NPV with capital increase (block 2) and reductions at the achieved share', LABEL)
+sens['A101'] = ('8. Robustness summary: NPV relative to BAU ($) and highest-NPV scenario (report Table 4)', HEAD)
+colhead(102, 'Test')
+sens['E102'] = ('Highest NPV', COLH)
+tests = [(103, 'Base case', 7),
+         (104, '="Discount rate "&TEXT($B$4,"0%")', 8),
+         (105, '="Discount rate "&TEXT($B$5,"0%")', 9),
+         (106, '="Erosion rates +"&TEXT($B$22,"0%")', 24),
+         (107, '="Capital costs +"&TEXT($B$14,"0%")', 17),
+         (108, '="Reductions at "&TEXT($B$94,"0%")&" of modelled"', 98),
+         (109, '="Sediment value $"&TEXT($B$92,"#,##0")&"/t"', 96),
+         (110, '="Sediment value $"&TEXT($B$93,"#,##0")&"/t"', 97),
+         (111, '="Capital +"&TEXT($B$14,"0%")&" and reductions at "&TEXT($B$94,"0%")', 99)]
+for r, label, src in tests:
+    sens[f'A{r}'] = (label, LABEL)
+    for c in 'BCD':
+        sens[f'{c}{r}'] = (f'={c}{src}', CUR)
+    sens[f'E{r}'] = (f'=INDEX($B$102:$D$102,MATCH(MAX(B{r}:D{r}),B{r}:D{r},0))', GEN)
+
+
 def sheet3_xml(values):
     by_row = {}
     for ref, (content, style) in sens.items():
@@ -249,7 +298,7 @@ def sheet3_xml(values):
     return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-            '<sheetPr><tabColor theme="5" tint="0.79998168889431442"/></sheetPr><dimension ref="A1:E87"/>'
+            '<sheetPr><tabColor theme="5" tint="0.79998168889431442"/></sheetPr><dimension ref="A1:E111"/>'
             '<sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/>'
             '<cols><col min="1" max="1" width="78" style="1" customWidth="1"/><col min="2" max="5" width="22" style="1" customWidth="1"/></cols>'
             f'<sheetData>{"".join(out)}</sheetData>'
@@ -280,9 +329,10 @@ def cpi_rows(values):
         if kind == 'header':
             out.append(f'<row r="{r}" spans="1:4" s="2" customFormat="1">{txt(f"A{r}", 16, label)}'
                        f'<c r="B{r}" s="17"/><c r="C{r}" s="17"/><c r="D{r}" s="18"/></row>')
-        elif kind == 'data':
+        elif kind in ('data', 'data2'):
+            st = 38 if kind == 'data' else 39
             out.append(f'<row r="{r}" spans="1:4">{txt(f"A{r}", 9, label)}{txt(f"B{r}", 13, unit)}'
-                       f'<c r="C{r}" s="38"><v>{formula!r}</v></c>{txt(f"D{r}", 22, source)}</row>')
+                       f'<c r="C{r}" s="{st}"><v>{formula!r}</v></c>{txt(f"D{r}", 22, source)}</row>')
         else:
             v = (values or {}).get(f'C{r}')
             out.append(f'<row r="{r}" spans="1:4">{txt(f"A{r}", 9, label)}{txt(f"B{r}", 13, unit)}'
