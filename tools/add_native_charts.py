@@ -189,7 +189,7 @@ for i in range(3):
              f'<c:spPr>{line(BLUES[i], 28575)}</c:spPr><c:marker><c:symbol val="none"/></c:marker>'
              f'<c:xVal>{numref(f"Sheet1!$A$2:$A${n + 1}", grid)}</c:xVal><c:yVal>{numref(f"Sheet1!${col}$2:${col}${n + 1}", ys[i])}</c:yVal>'
              '<c:smooth val="0"/></c:ser>')
-refs = [('Base-case value ($1,725/t)', val, '595959', 'dash', 'F'), (f'S4 overtakes S2 (${switch:,.0f}/t)', switch, 'A6A6A6', 'sysDot', 'H')]
+refs = [(f'Base-case value (${val:,.0f}/t)', val, '595959', 'dash', 'F'), (f'S4 overtakes S2 (${switch:,.0f}/t)', switch, 'A6A6A6', 'sysDot', 'H')]
 for j, (name, x, rgb, dash, col) in enumerate(refs):
     ycol = chr(ord(col) + 1)
     sers += (f'<c:ser><c:idx val="{3 + j}"/><c:order val="{3 + j}"/><c:tx>{strref(f"Sheet1!${col}$1", [name])}</c:tx>'

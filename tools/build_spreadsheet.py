@@ -37,8 +37,8 @@ CPI_ROWS = [
     (46, 'row', 'FY2024-25 average CPI (2011-12 = 100)', 'index',
      'AVERAGE(139.1,139.4,140.7,141.7)', 'ABS 6401.0 quarterly index: Sep-24 139.1, Dec-24 139.4, Mar-25 140.7, Jun-25 141.7'),
     (47, 'row', 'FY2025-26 year-average CPI inflation', '%',
-     'AVERAGE(3,3,3.5,3.8,3.4,3.8,3.8,3.7,4.6,4.2,4,3.8)',
-     'Mean of ABS monthly annual CPI movements Jul-25 to Jun-26 (series re-referenced to Sep-25 = 100, so FY2025-26 is chained to FY2024-25)'),
+     'AVERAGE(3,3.2,3.6,3.8,3.4,3.8,3.8,3.7,4.6,4.2,4,3.8)',
+     'ABS monthly annual CPI movements Jul-25 to Jun-26: 3.0, 3.2, 3.6, 3.8, 3.4, 3.8, 3.8, 3.7, 4.6, 4.2, 4.0, 3.8 (series re-referenced to Sep-25 = 100, so FY2025-26 is chained to FY2024-25)'),
     (48, 'row', 'FY2025-26 average CPI (2011-12 = 100 equivalent)', 'index',
      'C46*(1+C47/100)', 'Calculated'),
 ]
